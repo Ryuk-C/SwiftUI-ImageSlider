@@ -12,7 +12,6 @@ public struct ImageSliderView: View {
     public let timer = Timer.publish(every: 3, on: .main, in: .common).autoconnect()
     
     @State private var tabSelection = 0
-    @State private var currentSelection = 0
 
     let images: [SliderListModel]
 
@@ -56,15 +55,12 @@ public struct ImageSliderView: View {
 
                 }
 
-
             }.tabViewStyle(PageTabViewStyle())
                 .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .never))
                 .onChange(of: tabSelection, perform: { index in
                     
-                    currentSelection = tabSelection
-
                     NotificationCenter.default.post(name: NSNotification.SliderIndex,
-                        object: nil, userInfo: ["info": currentSelection])
+                        object: nil, userInfo: ["info": tabSelection])
                     
                 })
                 .onReceive(timer, perform: { _ in
@@ -72,11 +68,7 @@ public struct ImageSliderView: View {
                 withAnimation {
                     
                     tabSelection = tabSelection < images.count - 1 ? tabSelection + 1 : 0
-                    currentSelection = tabSelection
-                    
-                    NotificationCenter.default.post(name: NSNotification.SliderIndex,
-                        object: nil, userInfo: ["info": currentSelection])
-                    
+                                        
                 }
             })
         }
